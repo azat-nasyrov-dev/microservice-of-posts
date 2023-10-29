@@ -3,9 +3,11 @@ import { ICommandHandler } from '@nestjs/cqrs';
 import { CreatePostCommandHandler } from '@lib/post/application-services/commands/create-post/create-post.command-handler';
 import { UpdatePostCommandHandler } from '@lib/post/application-services/commands/update-post/update-post.command-handler';
 import { DeletePostCommandHandler } from '@lib/post/application-services/commands/delete-post/delete-post.command-handler';
+import { SetPublishedCommandHandler } from '@lib/post/application-services/commands/set-published/set-published.command-handler';
 
 export const POST_COMMANDS_HANDLERS: Type<ICommandHandler>[] = [
   CreatePostCommandHandler,
   UpdatePostCommandHandler,
   DeletePostCommandHandler,
+  SetPublishedCommandHandler,
 ];
