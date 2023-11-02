@@ -2,7 +2,6 @@ import { config } from 'dotenv';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { ENTITIES } from '@lib/entities';
 
 config({ path: join(process.cwd(), '.env') });
 
@@ -20,7 +19,10 @@ const options = (): DataSourceOptions => {
     type: 'postgres',
     schema: 'public',
     logging: configService.get('IS_PROD') === 'false',
-    entities: ENTITIES,
+    entities: [
+      join(process.cwd(), 'dist', 'libs', 'entities', '**', '*.entity.{ts,js}'),
+    ],
+    migrations: [join(process.cwd(), 'migrations', '**', '*migration.ts')],
     migrationsRun: true,
     migrationsTableName: 'migrations',
   };
