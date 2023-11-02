@@ -29,7 +29,7 @@ export class PostAggregate extends PostServices implements IPost {
 
   @IsBoolean()
   @Exclude()
-  published = false;
+  isPublished = false;
 
   @IsString()
   createdAt = new Date().toISOString();
