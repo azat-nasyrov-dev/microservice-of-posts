@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PostRepository } from '@lib/post/providers/post.repository';
 import { PaginationDto } from '@lib/shared/dto';
 import { IPost, PostAggregate } from '@lib/post';
@@ -16,11 +16,8 @@ export class PostAdapter implements PostRepository {
   ) {}
 
   async save(post: IPost): Promise<PostAggregate> {
-    if (post?.id) {
-      const existPost = await this.findOne(post.id);
-      if (!existPost) {
-        throw new NotFoundException(`Post by id ${post.id} not found!`);
-      }
+    const existPost = await this.findOne(post.id);
+    if (existPost) {
       const { id, ...toUpdate } = post;
       await this.postRepository.update({ id }, toUpdate);
       return this.findOne(post.id);
@@ -40,7 +37,7 @@ export class PostAdapter implements PostRepository {
       });
 
     if (!existPost) {
-      throw new NotFoundException(`Post by id ${id} not found!`);
+      return null;
     }
 
     return PostAggregate.create(existPost);
