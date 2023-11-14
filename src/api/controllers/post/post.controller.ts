@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -71,5 +72,10 @@ export class PostController {
   @Patch(':id')
   setPublished(@Param('id', ParseUUIDPipe) id: string) {
     return this.postFacade.commands.setPublished(id);
+  }
+
+  @Delete(':id')
+  deletePost(@Param('id', ParseUUIDPipe) id: string) {
+    return this.postFacade.commands.deletePost(id);
   }
 }
