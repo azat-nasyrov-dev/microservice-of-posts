@@ -48,4 +48,9 @@ export class PostResolver {
       authorId: randomStringGenerator(),
     });
   }
+
+  @Mutation(() => Boolean)
+  async deletePost(@Args('id') id: string) {
+    return await this.postFacade.commands.deletePost(id);
+  }
 }
