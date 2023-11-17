@@ -3,7 +3,7 @@ import { PaginatedPosts, PostResponse } from '../responses';
 import { PostFacade } from '@lib/post/application-services';
 import { PaginationDto } from '@lib/shared';
 import { plainToInstance } from 'class-transformer';
-import { CreatePostInput } from '../inputs';
+import { CreatePostInput, UpdatePostInput } from '../inputs';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 
 @Resolver(() => PostResponse)
@@ -39,5 +39,13 @@ export class PostResolver {
   @Mutation(() => PostResponse)
   async setPublishedPost(@Args('id') id: string) {
     return await this.postFacade.commands.setPublished(id);
+  }
+
+  @Mutation(() => PostResponse)
+  async updatePost(@Args('updatePostInput') updatePostInput: UpdatePostInput) {
+    return await this.postFacade.commands.updatePost({
+      ...updatePostInput,
+      authorId: randomStringGenerator(),
+    });
   }
 }
