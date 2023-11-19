@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PostFacade } from '@lib/post/application-services';
-import { CreatePostDto } from '@lib/post/application-services/commands/dto';
 import { RabbitRPC } from '@golevelup/nestjs-rabbitmq';
+import { CreatePostContract } from '@amqp/amqp-contracts';
 
 @Injectable()
 export class ConsumerService {
@@ -10,17 +10,34 @@ export class ConsumerService {
   constructor(private readonly postFacade: PostFacade) {}
 
   @RabbitRPC({
-    exchange: 'post',
-    routingKey: 'create-post',
-    queue: 'create-post',
+    exchange: CreatePostContract.queue.exchange.name,
+    routingKey: CreatePostContract.queue.routingKey,
+    queue: CreatePostContract.queue.queue,
   })
-  private async createPost(post: CreatePostDto) {
+  private async createPost(
+    request: CreatePostContract.request,
+  ): Promise<CreatePostContract.response> {
+    const { payload: post, ...requestMessage } = request;
     try {
       const createdPost = await this.postFacade.commands.createPost(post);
-      return createdPost;
+      return {
+        ...requestMessage,
+        payload: createdPost,
+      };
     } catch (error) {
       this.logger.error(error);
-      return null;
+      return {
+        ...requestMessage,
+        payload: null,
+        error: this.errorHandler(error),
+      };
     }
+  }
+
+  private errorHandler(error: any) {
+    return {
+      code: error?.name || 'error',
+      message: error?.message || JSON.stringify(error),
+    };
   }
 }

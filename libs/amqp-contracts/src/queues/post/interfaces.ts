@@ -4,6 +4,9 @@ export interface CreatePostRequest {
 
   /** Сообщение поста */
   message: string;
+
+  /** Идентификатор автора поста */
+  authorId: string;
 }
 
 export interface PostResponse {
