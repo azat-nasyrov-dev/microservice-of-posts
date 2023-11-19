@@ -1,5 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
+import { gqlErrorHandler } from '@lib/providers/graphql/error-handler';
 
 export const apolloDriverConfig: ApolloDriverConfig = {
   driver: ApolloDriver,
@@ -13,4 +14,5 @@ export const apolloDriverConfig: ApolloDriverConfig = {
   ),
   sortSchema: true,
   context: ({ req, res }) => ({ req, res }),
+  formatError: gqlErrorHandler,
 };
