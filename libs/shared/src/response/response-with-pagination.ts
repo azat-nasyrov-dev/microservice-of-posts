@@ -8,12 +8,6 @@ import {
 import { applyDecorators, Type } from '@nestjs/common';
 
 export class ResponseWithPagination<T> extends PaginationDto {
-  @ApiProperty({ description: 'Количество строк', type: 'number' })
-  limit: number;
-
-  @ApiProperty({ description: 'Пропуск строк', type: 'number' })
-  offset: number;
-
   @ApiProperty({ description: 'Всего записей в БД', type: 'number' })
   total!: number;
 
